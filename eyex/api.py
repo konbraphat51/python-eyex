@@ -72,6 +72,10 @@ class EyeXInterface(object):
         event = c.c_voidp()
         behavior = c.c_voidp()
 
+        # Convert async_data to proper void pointer to avoid overflow error
+        if isinstance(async_data, int):
+            async_data = c.c_void_p(async_data)
+        
         self.eyex_dll.txGetAsyncDataContent(async_data, c.byref(event))
 
         if self.eyex_dll.txGetEventBehavior(event, c.byref(behavior), 1) == tx.TX_RESULT_OK:
@@ -89,6 +93,10 @@ class EyeXInterface(object):
         self.eyex_dll.txReleaseObject(c.byref(event))
 
     def _on_snapshot_committed(self, async_data, param):
+        # Convert async_data to proper void pointer to avoid overflow error
+        if isinstance(async_data, int):
+            async_data = c.c_void_p(async_data)
+            
         result = c.c_int(0)
         self.eyex_dll.txGetAsyncDataResultCode(async_data, c.pointer(result))
 
