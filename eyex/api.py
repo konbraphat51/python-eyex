@@ -71,6 +71,7 @@ class EyeXInterface(object):
     def _event_handler(self, async_data, userParam):
         event = c.c_voidp()
         behavior = c.c_voidp()
+        async_data = c.c_void_p(async_data)
 
         self.eyex_dll.txGetAsyncDataContent(async_data, c.byref(event))
 
@@ -89,6 +90,7 @@ class EyeXInterface(object):
         self.eyex_dll.txReleaseObject(c.byref(event))
 
     def _on_snapshot_committed(self, async_data, param):
+        async_data = c.c_void_p(async_data)
         result = c.c_int(0)
         self.eyex_dll.txGetAsyncDataResultCode(async_data, c.pointer(result))
 
